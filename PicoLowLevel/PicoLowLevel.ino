@@ -68,7 +68,7 @@ SmartMotor motorTrLeft(DRV_TR_LEFT_PWM, DRV_TR_LEFT_DIR, ENC_TR_LEFT_A, ENC_TR_L
 SmartMotor motorTrRight(DRV_TR_RIGHT_PWM, DRV_TR_RIGHT_DIR, ENC_TR_RIGHT_A, ENC_TR_RIGHT_B, true);
 //----------------------------------
 DynamixelLL dxl_traction(Serial1, 0);
-const uint8_t motorIDs_traction[] = {212, 114};                                        //TODO : METTEREE GLI ADDRESS GIUSTI
+const uint8_t motorIDs_traction[] = {212, 114};
 const uint8_t numMotors_traction = sizeof(motorIDs_traction) / sizeof(motorIDs_traction[0]);
 DynamixelLL mot_Left_traction(Serial1, motorIDs_traction[0]);
 DynamixelLL mot_Right_traction(Serial1, motorIDs_traction[1]);
@@ -377,12 +377,12 @@ mot_Right_traction.setLED(true);
   mot_Right_traction.setProfileAcceleration(ProfileAcceleration);
 
   // Initialize a known present position for troubleshooting.
-  getpositions0[0] = 0; // Initialize positions to 0
-  getpositions0[1] = 0; // Initialize positions to 0
+  //getpositions0[0] = 0; // Initialize positions to 0
+  //getpositions0[1] = 0; // Initialize positions to 0
 
-  dxl_traction.setGoalPosition_EPCM(getpositions0);
-  mot_Left_traction.setGoalPosition_EPCM(0);  // Address 65, Value 1, Size 1 byte
-  mot_Right_traction.setGoalPosition_EPCM(0);  // Address 65, Value 1, Size 1 byte
+  //dxl_traction.setGoalPosition_EPCM(getpositions0);
+ // mot_Left_traction.setGoalPosition_EPCM(0);  // Address 65, Value 1, Size 1 byte
+  //mot_Right_traction.setGoalPosition_EPCM(0);  // Address 65, Value 1, Size 1 byte
 Serial.println("Setup complete. Waiting for CAN messages...");
 
 

@@ -349,7 +349,7 @@ mot_6.setGoalPosition_EPCM(pos0_mot_6);  // Address 65, Value 1, Size 1 byte
   dxl_traction.enableSync(motorIDs_traction, numMotors_traction);
 
   // Configure Drive Mode for each motor:
-  mot_Left_traction.setDriveMode(false, false, false);                 //TODO : CONTROLLARE
+  mot_Left_traction.setDriveMode(false, false, true);                 //TODO : CONTROLLARE
   mot_Right_traction.setDriveMode(false, false, false);
 
 

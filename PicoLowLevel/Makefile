@@ -45,6 +45,10 @@ compile: clean_all
 	@arduino-cli compile --fqbn $(BOARD_FQBN) --build-path $(BUILD_DIR) $(SKETCH_PATH) --output-dir $(OUTPUT_DIR) $(LIBRARY_FLAGS) \
 		$(foreach dir, $(INCLUDE_PATHS), --build-property "compiler.cpp.extra_flags=-I$(dir) -D$(MODULE_DEFINE)")
 
+compile_all:
+	$(MAKE) compile BUILD_DIR=$(CURDIR)/build1 OUTPUT_DIR=$(CURDIR)/out_MK2_MOD1 MODULE_DEFINE="MK2_MOD1"
+	$(MAKE) compile BUILD_DIR=$(CURDIR)/build2 OUTPUT_DIR=$(CURDIR)/out_MK2_MOD2 MODULE_DEFINE="MK2_MOD2"
+
 compile_fast:
 	@arduino-cli compile --fqbn $(BOARD_FQBN) "$(SKETCH_PATH)"
 
@@ -109,7 +113,7 @@ help:
 	@echo "  make upload_bootsel - Upload the .uf2 file manually to E:/"
 	@echo "  make monitor       - Start the serial monitor"
 	@echo "  make all           - Compile and upload the project in one step"
-	@echo "  make clean         - Clean compilation files"
+	@echo "  make clean_all     - Clean compilation files"
 	@echo "  make help          - Show this guide"
 	@echo "  make auto_com_port - Automatically detect the list of COM port of the Raspberry Pi Pico"
 	@echo "  make port          - List all available COM ports"

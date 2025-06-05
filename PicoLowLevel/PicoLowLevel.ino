@@ -632,7 +632,7 @@ void sendFeedback()
 {
 
   // send motor data
-  float speeds[2] = {motorTrLeft.getSpeed(), motorTrRight.getSpeed()};
+  //float get_speeds_dxl[2] = {motorTrLeft.getSpeed(), motorTrRight.getSpeed()}; //TODO : finire questo
   canW.sendMessage(MOTOR_FEEDBACK, speeds, 8);
 
   // send yaw angle of the joint if this module has one

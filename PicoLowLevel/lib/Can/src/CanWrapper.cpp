@@ -3,7 +3,7 @@
 void CanWrapper::begin() {
     mcp2515.reset();
     mcp2515.setBitrate(CAN_125KBPS, MCP_8MHZ);
-/*
+
     mcp2515.setConfigMode();// tell the MCP2515 next instructions are for configuration
 
     // enable filtering for 29 bit address on both RX buffers
@@ -17,7 +17,7 @@ void CanWrapper::begin() {
     mcp2515.setFilter(MCP2515::RXF3, true, CAN_ID << 8);
     mcp2515.setFilter(MCP2515::RXF4, true, CAN_ID << 8);
     mcp2515.setFilter(MCP2515::RXF5, true, CAN_ID << 8);
-*/
+
     mcp2515.setNormalMode();
 }
 

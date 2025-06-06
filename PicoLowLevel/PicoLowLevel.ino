@@ -64,8 +64,8 @@ int32_t getpositions[2] = {0, 0}; // Initialize positions to 0
 #define ProfileVelocity 20
 
 //------
-SmartMotor motorTrLeft(DRV_TR_LEFT_PWM, DRV_TR_LEFT_DIR, ENC_TR_LEFT_A, ENC_TR_LEFT_B, false);
-SmartMotor motorTrRight(DRV_TR_RIGHT_PWM, DRV_TR_RIGHT_DIR, ENC_TR_RIGHT_A, ENC_TR_RIGHT_B, true);
+//SmartMotor motorTrLeft(DRV_TR_LEFT_PWM, DRV_TR_LEFT_DIR, ENC_TR_LEFT_A, ENC_TR_LEFT_B, false);
+//SmartMotor motorTrRight(DRV_TR_RIGHT_PWM, DRV_TR_RIGHT_DIR, ENC_TR_RIGHT_A, ENC_TR_RIGHT_B, true);
 //----------------------------------
 DynamixelLL dxl_traction(Serial1, 0);
 const uint8_t motorIDs_traction[] = {212, 114};                                        //TODO : METTEREE GLI ADDRESS GIUSTI
@@ -105,7 +105,7 @@ Display display;
 
 void setup() {
   Serial.begin(115200);
-  
+
   while (!Serial) {
     // Wait for serial port to connect. Needed for native USB port only
   }
@@ -179,8 +179,7 @@ Serial1.setTX(0);
 
   delay(10);
   // Initialize a known present position for troubleshooting.
-  //homingOffset[0] = 500;
-  //homingOffset[1] = 1500;
+
   getpositions[0] = 0;
   getpositions[1] = 0;
   //getLoads[0] = 0;
@@ -320,7 +319,7 @@ mot_6.setGoalPosition_EPCM(pos0_mot_6);  // Address 65, Value 1, Size 1 byte
 
 
   //-----------------------------------------------------------------
-  
+
   Serial1.setTX(0);
   Serial1.setRX(1);
   Serial1.begin(1000000); // Set baud rate for Dynamixel communication
@@ -350,7 +349,7 @@ mot_6.setGoalPosition_EPCM(pos0_mot_6);  // Address 65, Value 1, Size 1 byte
 
   // Configure Drive Mode for each motor:
   mot_Left_traction.setDriveMode(false, false, false);                 //TODO : CONTROLLARE
-  mot_Right_traction.setDriveMode(false, false, false);
+  mot_Right_traction.setDriveMode(false, false, true);
 
 
 
@@ -360,8 +359,7 @@ mot_6.setGoalPosition_EPCM(pos0_mot_6);  // Address 65, Value 1, Size 1 byte
   mot_Right_traction.setOperatingMode(1);
 
 
-  // Set Homing Offset for each motor:
-  //dxl.setHomingOffset(homingOffset);
+
 
   // Enable torque for both motors.
  dxl_traction.setTorqueEnable(true);
@@ -370,19 +368,9 @@ mot_6.setGoalPosition_EPCM(pos0_mot_6);  // Address 65, Value 1, Size 1 byte
 mot_Left_traction.setLED(true);
 mot_Right_traction.setLED(true);
 
-  // Set Profile Velocity and Profile Acceleration for smooth motion.
-  mot_Left_traction.setProfileVelocity(ProfileVelocity);
-  mot_Left_traction.setProfileAcceleration(ProfileAcceleration);
-  mot_Right_traction.setProfileVelocity(ProfileVelocity);
-  mot_Right_traction.setProfileAcceleration(ProfileAcceleration);
 
-  // Initialize a known present position for troubleshooting.
-  getpositions0[0] = 0; // Initialize positions to 0
-  getpositions0[1] = 0; // Initialize positions to 0
 
-  dxl_traction.setGoalPosition_EPCM(getpositions0);
-  mot_Left_traction.setGoalPosition_EPCM(0);  // Address 65, Value 1, Size 1 byte
-  mot_Right_traction.setGoalPosition_EPCM(0);  // Address 65, Value 1, Size 1 byte
+
 Serial.println("Setup complete. Waiting for CAN messages...");
 
 
@@ -427,9 +415,10 @@ motor_num=1;
     time_data = -1;
     Serial.println("Stopping motors after timeout.");
     Serial.print("\tMOTOR_LEFT\t");
-    motorTrLeft.stop();
+    //motorTrLeft.stop();
+    dxl_traction.setGoalVelocity_RPM(0.0f, 0.0f); // Stop both motors
     Serial.print("\tMOTOR_RIGHT\t");
-    motorTrRight.stop();
+    //motorTrRight.stop();
   } else {
 
 

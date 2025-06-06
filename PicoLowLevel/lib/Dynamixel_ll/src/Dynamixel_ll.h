@@ -402,6 +402,26 @@ public:
     template <uint8_t N>
     uint8_t setGoalVelocity_RPM(const float (&rpmValues)[N]);
 
+    /**
+     * @brief Retrieves the current present velocity in RPM.
+     * This function reads the current velocity of the servo in revolutions per minute (RPM).
+     * @param rpm Reference to store the current velocity in RPM.
+     * @return uint8_t 0 on success, nonzero on error.
+     */
+
+    uint8_t getPresentVelocity_RPM(float &rpm);
+
+    /**
+     * @brief Retrieves the current present velocity in RPM for multiple motors.
+     * This function reads the current velocities of multiple servos in revolutions per minute (RPM).
+     * @tparam N Size of the input array, must match the number of motors in sync.
+     * @param rpms Array to store the current velocities in RPM for each motor.
+     * @return uint8_t 0 on success, nonzero on error.
+     */
+    template <uint8_t N>
+    uint8_t getPresentVelocity_RPM(float (&rpms)[N]);
+
+
 
     /**
      * @brief Retrieves the current present position.

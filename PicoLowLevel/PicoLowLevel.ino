@@ -68,7 +68,7 @@ SmartMotor motorTrLeft(DRV_TR_LEFT_PWM, DRV_TR_LEFT_DIR, ENC_TR_LEFT_A, ENC_TR_L
 SmartMotor motorTrRight(DRV_TR_RIGHT_PWM, DRV_TR_RIGHT_DIR, ENC_TR_RIGHT_A, ENC_TR_RIGHT_B, true);
 //----------------------------------
 DynamixelLL dxl_traction(Serial1, 0);
-const uint8_t motorIDs_traction[] = {212, 114};
+const uint8_t motorIDs_traction[] = {212, 114};                                        //TODO : METTEREE GLI ADDRESS GIUSTI
 const uint8_t numMotors_traction = sizeof(motorIDs_traction) / sizeof(motorIDs_traction[0]);
 DynamixelLL mot_Left_traction(Serial1, motorIDs_traction[0]);
 DynamixelLL mot_Right_traction(Serial1, motorIDs_traction[1]);
@@ -105,7 +105,7 @@ Display display;
 
 void setup() {
   Serial.begin(115200);
-
+  
   while (!Serial) {
     // Wait for serial port to connect. Needed for native USB port only
   }
@@ -320,7 +320,7 @@ mot_6.setGoalPosition_EPCM(pos0_mot_6);  // Address 65, Value 1, Size 1 byte
 
 
   //-----------------------------------------------------------------
-
+  
   Serial1.setTX(0);
   Serial1.setRX(1);
   Serial1.begin(1000000); // Set baud rate for Dynamixel communication
@@ -349,7 +349,7 @@ mot_6.setGoalPosition_EPCM(pos0_mot_6);  // Address 65, Value 1, Size 1 byte
   dxl_traction.enableSync(motorIDs_traction, numMotors_traction);
 
   // Configure Drive Mode for each motor:
-  mot_Left_traction.setDriveMode(false, false, true);                 //TODO : CONTROLLARE
+  mot_Left_traction.setDriveMode(false, false, false);                 //TODO : CONTROLLARE
   mot_Right_traction.setDriveMode(false, false, false);
 
 
@@ -377,12 +377,12 @@ mot_Right_traction.setLED(true);
   mot_Right_traction.setProfileAcceleration(ProfileAcceleration);
 
   // Initialize a known present position for troubleshooting.
-  //getpositions0[0] = 0; // Initialize positions to 0
-  //getpositions0[1] = 0; // Initialize positions to 0
+  getpositions0[0] = 0; // Initialize positions to 0
+  getpositions0[1] = 0; // Initialize positions to 0
 
-  //dxl_traction.setGoalPosition_EPCM(getpositions0);
- // mot_Left_traction.setGoalPosition_EPCM(0);  // Address 65, Value 1, Size 1 byte
-  //mot_Right_traction.setGoalPosition_EPCM(0);  // Address 65, Value 1, Size 1 byte
+  dxl_traction.setGoalPosition_EPCM(getpositions0);
+  mot_Left_traction.setGoalPosition_EPCM(0);  // Address 65, Value 1, Size 1 byte
+  mot_Right_traction.setGoalPosition_EPCM(0);  // Address 65, Value 1, Size 1 byte
 Serial.println("Setup complete. Waiting for CAN messages...");
 
 
@@ -413,7 +413,7 @@ motor_num=1;
     time_tel_avg = (time_tel_avg + (time_cur - time_tel)) / 2;
     time_tel = time_cur;
 
-   // sendFeedback();
+    sendFeedback();
   }
 
   if (canW.readMessage(&msg_id, msg_data)) {
@@ -632,8 +632,10 @@ void sendFeedback()
 {
 
   // send motor data
-  //float get_speeds_dxl[2] = {motorTrLeft.getSpeed(), motorTrRight.getSpeed()}; //TODO : finire questo
-  canW.sendMessage(MOTOR_FEEDBACK, speeds, 8);
+  //float speeds[2] = {motorTrLeft.getSpeed(), motorTrRight.getSpeed()};
+  float currentSpeeds[2];
+  dxl_traction.getPresentVelocity_RPM(currentSpeeds);
+  canW.sendMessage(MOTOR_FEEDBACK, currentSpeeds, 8);
 
   // send yaw angle of the joint if this module has one
 #ifdef MODC_YAW

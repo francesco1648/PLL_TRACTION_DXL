@@ -1312,6 +1312,30 @@ uint8_t DynamixelLL::setGoalVelocity_RPM(float rpm)
     return writeRegister(104, static_cast<uint32_t>(velocityValue), 4);
 }
 
+
+uint8_t DynamixelLL::getPresentVelocity_RPM(float &rpm)
+{
+    uint32_t raw = 0;
+    uint8_t error = readRegister(128, raw, 4); // address 128, 4 bytes
+
+    if (error != 0)
+    {
+        if (_debug)
+        {
+            Serial.print("Error reading Present Velocity: ");
+            Serial.println(error, HEX);
+        }
+        rpm = 0;
+        return error;
+    }
+
+    int32_t signedRaw = static_cast<int32_t>(raw);
+    rpm = signedRaw * 0.229f;
+
+    return 0;
+}
+
+
 uint8_t DynamixelLL::getPresentPosition(int32_t &presentPosition)
 {
     uint32_t temp = 0;

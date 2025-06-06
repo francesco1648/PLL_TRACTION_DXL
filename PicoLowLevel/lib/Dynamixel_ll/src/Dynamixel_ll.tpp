@@ -471,3 +471,24 @@ uint8_t DynamixelLL::setGoalVelocity_RPM(const float (&rpmValues)[N])
 
     return syncWrite(104, 4, _motorIDs, processedValues, _numMotors); // RAM address 104, 4 bytes
 }
+
+template <uint8_t N>
+uint8_t DynamixelLL::getPresentVelocity_RPM(float (&rpms)[N])
+{
+    if (checkArraySize(N) != 0)
+        return 1;
+
+    uint32_t rawValues[_numMotors];
+    uint8_t error = syncRead(128, 4, _motorIDs, rawValues, _numMotors);
+
+    if (error != 0 && _debug)
+    {
+        Serial.print("Error reading Present Velocities: ");
+        Serial.println(error);
+    }
+
+    for (uint8_t i = 0; i < _numMotors; i++)
+        rpms[i] = static_cast<int32_t>(rawValues[i]) * 0.229f;
+
+    return error;
+}
